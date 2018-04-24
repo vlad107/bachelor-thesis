@@ -1,0 +1,219 @@
+\chapter{Введение в область}
+\startrelatedwork
+
+\textbf{TODO: КРАСИВОЕ НАЧАЛО}
+
+\section{Исчисление предикатов первого порядка}
+
+Будем использовать нотацию, предложенную Alexander Leitsch \cite{Leitsch:1997:RC:260906}.
+
+\subsection{Определение исчисления}
+
+Далее будем считать, что нам даны:
+\begin{enumerate}
+	\item $V$    --- счётное множество названий переменных
+    \item $CS$   --- множество константных символов
+    \item $FS_i$ --- множество $i$-нарных функциональных символов, где $i \in \mathbb{N}$. \\
+    За $FS$ обозначим $\bigcup\limits_{i=1}^{\infty} FS_{i}$
+    \item $PS_i$ --- множество $i$-нарных предикатных символов, где $i \in \mathbb{N}$. \\
+    За $PS$ обозначим $\bigcup\limits_{i=1}^{\infty} PS_{i}$
+    \item Логические связки --- символы $\vee, \wedge, \rightarrow, \neg$
+    \item Кванторы --- символы $\forall, \exists$
+\end{enumerate}
+
+\begin{definition}
+  \emph{Множество термов $T$} --- минимальное по включению множество, определяемое индуктивно:
+  \begin{enumerate}
+  	\item $V \subseteq T$
+    \item $CS \subseteq T$
+    \item Если $t_1, t_2, \ldots, t_k \in T; f \in FS_k$, тогда $f(t_1, t_2, \ldots, t_k) \in T$
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}
+  \emph{Атомарная формула} --- пусть $t_1, t_2, \ldots, t_k \in T; P \in PS_k$, тогда формула $P(t_1, t_2, \ldots, t_k)$ называется атомарной.
+\end{definition}
+
+Множество атомарных формул обозначим за $AT$. 
+
+\begin{definition}
+  \emph{Литерал}  Пусть $A$ -- атомарная формула, тогда $A, \neg A$ -- литералы.
+\end{definition}
+
+Множество литералов обозначим за $LIT$
+
+
+\begin{definition}
+  \emph{Множество формул исчесления предикатов $PL$} --- минимальное по включению множество, определяемое индуктивно:
+  \begin{enumerate}
+  	\item $LIT \subseteq PL$
+    \item Пусть $A, B \in PL$, тогда $A \to B, A \vee B, A \wedge B \in PL$ 
+    \item Пусть $A \in PL, x \in V, (\forall x) \notin A, (\exists x) \notin A$, тогда $(\forall x)A, (\exists x)A \in PL$
+  \end{enumerate}
+\end{definition}
+
+\subsection{Интерпретация}
+
+\begin{definition}
+  \emph{Свободное вхождение} --- тоже определим индуктивно. 
+  \begin{enumerate}
+  	\item Пусть формула $A \in LIT$. Тогда $x$ входит свободно, если $x$ встречается в $A$.
+    \item Пусть формула $A = B \odot C$, где $\odot \in \{ \to, \vee, \wedge \}$. Тогда $x$ входит свободно в $A$, если $x$ входит свободно в $B$, либо $C$.
+    \item Пусть формула $A = (Qy)B$, где $Q \in \{ \exists, \forall \}$. Тогда $x$ входит свободно в $A$, если $x$ входит свободно в $B$ и $y \neq x$
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}
+  \emph{Замкнутое вхождение} --- $x$ входит замкнуто в формулу $A$, если у $A$ существует подформула $B$ вида $(Qx)B'$, где $Q \in \{ \exists, \forall \}$ и $x$ входит свободно в $B'$
+\end{definition}
+
+\begin{definition}
+  \emph{Открытая и замкнутые формулы}.
+    \begin{enumerate}
+      \item Если у формулы нет свободных вхождений переменных, то она называется \textit{замкнутой}.
+      \item Если у формулы нет замкнутых вхождений переменных, то она называется \textit{открытой}.
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+  \emph{Интерпретация формулы}. Интерпретацией формулы $F$ из $PL$ назовём тройку $\Gamma = (D, \Phi, I)$, для которой верно следующее:
+    \begin{enumerate}
+		\item $D$ --- непустое множество, которое называется доменом $\Gamma$
+        \item $\Phi$ --- отображение из $CS(F) \cup FS(F) \cup PS(F)$, заданное так:
+          \begin{enumerate}
+              \item $\Phi(c) \in D$, если $c \in CS(F)$
+              \item Если $f \in FS_n(F)$, то $\Phi(f) : D^n \rightarrow D$
+              \item Если $P \in PS_n(F)$, то $\Phi(P) : D^n \rightarrow \{ 0, 1 \}$
+          \end{enumerate}
+        \item $I$ -- фукнция из $V$ в $D$, которая задаёт \textit{назначение переменных}
+    \end{enumerate}
+
+\end{definition}
+
+
+\begin{definition}
+  \emph{Эквивалентность интерпретаций}. Две интерпретации $\Gamma$ и $\Delta$ называются эквивалентными по модулю $x_1, x_2, \ldots, x_k$, если существуют такие $D, \Phi, I_1, I_2$, что $\Gamma = {(D, \Phi, I_1)}$, $\Delta = {(D, \Phi, I_2)}$, а также верно $v \notin \{x_1, x_2, \ldots, x_k\} \Rightarrow I_1(v) = I_2(v)$. Далее будем писать $\Gamma \sim_x \Delta$.
+\end{definition}
+
+\begin{definition}
+  \emph{Оценка исчисления предикатов}. Введём оценку $\nu_{\Gamma}$ как функцию из формулы в $\{0, 1\}$, которая будет определяться индукцией по структуре:
+  \begin{enumerate}
+  	\item Если формула $A$ -- атомарная, т.е. имеет вид $P(t_1, t_2, \ldots, t_k)$, то $\nu_{\Gamma}(A) = \Phi(P)(\nu_{\Gamma}(t_1), \nu_{\Gamma}(t_2), \ldots, \nu_{\Gamma}(t_k))$
+  	\item \begin{enumerate}
+    		\item $\nu_\Gamma(A \vee B) = \nu_\Gamma(A) \vee \nu_\Gamma(B)$
+    		\item $\nu_\Gamma(A \wedge B) = \nu_\Gamma(A) \wedge \nu_\Gamma(B)$
+    		\item $\nu_\Gamma(A \rightarrow B) = \nu_\Gamma(A) \rightarrow \nu_\Gamma(B)$
+    		\item $\nu_\Gamma(\neg A) = \neg(\nu_\Gamma(A))$
+    	  \end{enumerate}
+    \item $\nu_\Gamma((\forall x)A) = 1$, если для любой $\Delta$ верно $\Gamma \sim_x \Delta$    	  \item $\nu_\Gamma((\exists x)A) = 1$, если существует такая $\Delta$, что $\Gamma \sim_x \Delta$ и $\nu_\Delta(A) = 1$
+  \end{enumerate}
+\end{definition}
+
+Будем говорить, что 
+\begin{enumerate}
+	\item Интерпретация $\Gamma$ \textit{верифицирует} формулу $A$, если $\nu_{\Gamma}(A) = 1$.
+	\item Интерпретация $\Gamma$ \textit{опровергает} формулу $A$, если $\nu_{\Gamma}(A) = 0$.
+\end{enumerate}
+
+\subsection{Удовлетворимость и корректность}
+
+\begin{definition}
+  \emph{Модель}. Пусть дана формула $A$, содержащая свободные вхождения переменных $x_1, x_2, \ldots, x_k$, тогда интерпретация $\Gamma$ является \textit{моделью} для $A$, если для любой интерпретации $\Delta \sim_x \Gamma$ верно, что $\nu_{\Delta}(A) = 1$. Если $A$ -- замкнутая формула, то $\Gamma$ является моделью тогда и только тогда, когда $\Gamma$ верифицирует $A$.
+\end{definition}
+
+\begin{definition}
+  \emph{Удовлетворимость и корректность}. 
+  \begin{enumerate}
+  	\item Формула $F$ называется \textit{удовлетворимой}, если для неё существует модель.
+  	\item Формула $F$ называется \textit{корректной}, если любая интерпретация $\Gamma$ для этой формулы является моделью.
+  	\item Формулы $F$ и $G$ \textit{логически эквивалентны}, если у них одинаковое множество моделей. Обозначение $F \sim G$
+  	\item Будем писать $F \sim_{sat} G$, если $F \text{ -- удовлетворима} \iff G \text{ -- удовлетворима}$
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}
+  \emph{Клоз}. Пусть $L_1, L_2, \ldots, L_k$ -- литералы, тогда формулу вида $L_1 \vee L_2 \vee \dots \vee L_k$ будем называть \textit{клозом}
+\end{definition}
+
+
+\textbf{TODO: ввести CNF, определить что такое клоз} \\
+\textbf{TODO: сослаться на статью где я сводил FOF to CNF в прошлом году} \\
+
+Заметим, что формула $A$ корректна тогда и только тогда, когда $\neg A$ не удовлетворима. \textbf{А вопрос об удовлетворимости произвольной формулы эквивалентен вопросу об удовлетворимости множества клозов.} \\
+
+В отличие от \textit{Исчисления Высказываний}(далее ИВ), в \textit{Исчислении Предикатов}(далее ИП) мы не можем проверить все интерпретации, так как, вообще говоря, их бесконечно много.\\
+
+\section{Резолюции}
+
+\textbf{TODO: определение унификатора} 
+
+\subsection{Резолюционное исчисление}
+\textbf{TODO: описать общий подход резолюции, сослаться на refutation полноту}
+
+\subsection{Conflict Resolution}
+\label{sec:CR}
+Опишем модель Сonflict Resolution, введённую в 
+\cite{DBLP:journals/corr/SlaneyP16}
+\textbf{TODO: пояснить, что $[\ell]$ -- это предположение}
+
+\begin{figure}
+\begin{calculus}
+\centering
+\textbf{Unit-Propagating Resolution:}
+$$
+\infer[\upr{}{\sigma}]
+	  {\ell~\sigma}
+      {\ell_1 & \ldots & \ell_n & \overline{\ell'_1} \vee \ldots \vee \overline{\ell'_n} \vee \ell}
+$$
+
+где $\sigma$ --- унификатор $\ell_k$ и $\ell'_k$ для всех $k \in \{1, \ldots, n \}$.
+
+\bigskip
+
+\textbf{Conflict:}
+$$
+\infer[\confl{}{\sigma}]
+      {\bot}
+      {\ell & \overline{\ell'}}
+$$
+
+где $\sigma$ --- унификатор $\ell$ and $\ell'$.
+
+\bigskip
+
+\textbf{Conflict-Driven Clause Learning:}
+$$
+\infer[\cdcl{}{i}]
+      {(\overline{\ell_1} \sigma^1_1 \vee \ldots \vee \overline{\ell_1} \sigma^1_{m_1}) \vee \ldots \vee (\overline{\ell_n} \sigma^n_1 \vee \ldots \vee \overline{\ell_n} \sigma^n_{m_n})
+      }
+	  {\infer*{\bot}{\infer*[(\sigma_1^1,\ldots,\sigma_{m_1}^1)]{}{[\ell_1]^{\dls{i}{1}}} &  & \infer*[(\sigma_1^n,\ldots,\sigma_{m_n}^n)]{}{[\ell_n]^{\dls{i}{n}}}}
+      }
+$$
+
+где $\sigma^k_j$ (для $1 \leq k \leq n$ и $1 \leq j \leq m_k$) -- это \\
+композиция всех подстановок, использованных на $j$-ом пути \footnote{Так как
+  доказательство -- это ориентированный ациклический граф, который возможно не
+  является деревом, то может существовать несколько путей, соединяющих $\ell_k$ и
+  $\bot$ в доказательстве.} от $\ell_k$ до $\bot$.
+
+\end{calculus}
+\caption{Исчисление \emph{Conflict Resolution}}
+\label{fig:CR}
+\end{figure}
+
+
+\section{Акторы}
+
+Опишем модель акторов, впервые упомянутую в \cite{Hewitt:1973:UMA:1624775.1624804}
+\begin{definition}
+  \emph{Актор}. Вершина графа $x$, для которой возможны следующие операции:
+  \begin{enumerate}
+  	\item $receive(msg)$ --- принимает сообщение $msg$ от другого актора и выполняет функцию $fun(msg)$
+    \item $send(actorId, msg)$ --- в процессе выполнения функции $fun$ из предыдущего пунтка, актор может послать сообщение $msg$ другому актору $actorID$
+  \end{enumerate}
+\end{definition}
+
+
+\section{Примеры}
+
+
