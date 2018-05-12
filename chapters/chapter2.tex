@@ -1,5 +1,7 @@
 \chapter{Постановка задачи}
 \startrelatedwork
+\label{sec:chap2}
+
 
 \section{Мотивация}
 Систему для автоматического доказательства теорем можно рассматривать как совокупность небольших подсистем (акторов). В этой системе каждый актор:
@@ -11,14 +13,11 @@
 \end{enumerate} \par
 Интуитивная мотивация такого подхода происходит из социиологии, где люди не решают сложные задачи поодиночке. Например, если у меня болит горло, то я сделаю некоторые допущения о своём состоянии и обращусь к доктору. Таким образом, у каждой сущности есть небольшое подмножество задач, соответсвующих специализации этой сущности. А решение задачи происходит в процессе коммуникации сущностей.
 
-% TOOD: нужно больше.
-
 \section{Формальное построение модели}
 
 \subsection{Описание акторов}
 
-Так как у каждого актора есть внутреннее состояние, то мы можем определять функции и предикаты, зависящие от номера актора. На данный момент будем считать, что функции заданы заранее, однако в части %TODO: \ref{sec:DCRdyn}
-опишем вариант с динамическим изменением специализации.
+Так как у каждого актора есть внутреннее состояние, то мы можем определять функции и предикаты, зависящие от номера актора. Давайте введём функцию, котороая будет распределять литералы по акторам, то есть отвечать на вопрос "Работает ли актор $A$ с литералом $\ell$".
 
 \begin{definition}
   \emph{Специализация.} Пусть $A = \{A_1, A_2, \ldots, A_N\}$ --- множество из $N$ акторов. 
@@ -28,29 +27,32 @@
   Будем говорить, что актор $i$ \emph{специализируется} на литерале $\ell$, если верно $\insp{i}{\ell}$.
 \end{definition}
 
+На данном этапе будем считать, что \emph{специализация} задана заранее и не меняется в процессе доказательства. Однако, в разделе \ref{sec:onlineChanging} мы рассмотрим вариант с двумя дополнительными правилами вывода, который подразумевает изменение \emph{специализации} в процессе доказательства.
+
 \begin{definition}
-	\emph{Остаточный клоз.} Пусть $C = \ell_1 \vee \ldots \vee \ell_n$ -- клоз. Тогда $rem_a(C) = \ell_{i_1} \vee \ldots \vee \ell_{i_k}$ -- остаточный клоз внутри актора $a$, если 
+	\emph{Остаточный клоз.} Пусть $C = \ell_1 \vee \ldots \vee \ell_n$ -- клоз. Тогда $rem_a(C) = \ell_{i_1} \vee \ldots \vee \ell_{i_k}$ -- остаточный клоз относительно актора $a$, если $\Xi_a(\ell_i) \iff i \in \{i_1, \ldots, i_k\}$
 \end{definition}
 
 %% TODO: изменение этой функции в процессе доказательства, т.к. у акторов есть функция become, которая изменяет поведение актора.
 
-\subsection{Описание Distributed Conflict Resolution исчисления}
+\subsection{Описание Expertised Conflict Resolution исчисления}
 
-На рисунке \ref{fig:DCR} показаны правила для обобщённого на распределённый случай исчисления \emph{Conflict Resolution}, которое было описано в секции \ref{sec:CR}. \par
+На рисунке \ref{fig:ECR} показаны правила для обобщённого на распределённый случай исчисления \emph{Conflict Resolution}, которое было описано в секции \ref{sec:CR}. \par
 
 На правила вывода накладываются следующие дополнительные условия:
 \begin{enumerate}
 	\item \emph{Unit-Propagation Resolution.}
     \begin{itemize}
-    	\item ${\ell^i_1, \ldots, \ell^i_n, \ell'^i_1, \ldots, \ell'^i_n, \ell}$ -- литералы из актора $i$, т.е. для любого $k$ верно, что $\insp{i}{\ell^i_k}$, $\insp{i}{\ell'^i_k}$, $\insp{i}{\ell^i}$
+    	\item ${\ell^i_1, \ldots, \ell^i_n, \ell'^i_1, \ldots, \ell'^i_n, \ell}$ -- литералы из специализации актора $i$, т.е. для любого $k$ верно, что $\insp{i}{\ell^i_k}$, $\insp{i}{\ell'^i_k}$, $\insp{i}{\ell^i}$
         \item $\sigma$ -- унификатор для $\ell^i_k$ и $\ell'^i_k$ при всех $k \in \{1, \ldots, n \}$ 
-        \item $\jmath^i = \jmath^i_1 \vee \ldots \vee \jmath^i_m$, причём $\overline{\insp{i}{\jmath^i_k}}$ для всех $k \in \{1, \ldots, m\}$
+        \item $\jmath^i, \jmath_1^i, \ldots, \jmath_n^i$ -- остаточные клозы соответствующих высказываний из предпосылки.
     \end{itemize}
         
 	\item \emph{Cofnlict.}
     \begin{itemize}
         \item $\ell^i, \ell'^i$ -- литералы из актора $i$, т.е. верно $\insp{i}{\ell^i_k}$ и $\insp{i}{\ell'^i_k}$
     	\item $\sigma$ -- унификатор $\ell$ и $\ell'$
+        \item $\jmath_1^i, \jmath_2^i$ -- остаточные клозы соответствующих высказываний из предпосылки.
     \end{itemize}
         
     \item \emph{Conflict-Driven Clause Learning.}
@@ -70,15 +72,77 @@
     \end{itemize}
     
     \item \emph{Konwledge sharing.}
-    	На данном этапе не будем описывать дополнительных условий для этого правила вывода, однако в секции \ref{sec:restr} будут рассмотрены идеи ограничений, которые помогут нам ускорить реализацию данного алгоритма.
-
+    На данном этапе не будем описывать дополнительных условий для этого правила вывода, однако в секции \ref{sec:restr} будут рассмотрены идеи ограничений, которые помогут нам ускорить реализацию данного алгоритма.
 \end{enumerate}
 
-\subsection{Рассмотрение возможных ограничений на правило \emph{ks}}
-\label{sec:restr}
+В отличие от классического исчисления \emph{Conflict Resolution}, здесь каждому клозу приписывается ещё и номер актора, в котором на данный момент этот клоз был выведен. Правило \emph{Knowledge sharing} позволяет изменять этот номер. В предпосылках у старых правил \emph{Unit-Propagation}, \emph{Conflict} и \emph{Conflict-Driven Clause Learning} теперь вместо чистых литералов фигурируют целые клозы, которые, однако, имеют специальный вид: $\ell \vee \jmath$, где $\ell$ -- литерал, а $\jmath$ -- остаточный клоз соответствующего актора.
+
+
+
+\begin{figure}
+  \begin{prooftree}
+    \AxiomC{$(A \vee B)^1$}
+    \AxiomC{$\neg A^1$}
+    \RightLabel{$\confl{1}{}$}
+    \BinaryInfC{$B^1$}
+    \RightLabel{$\kshare{1}{2}$}
+    \UnaryInfC{$B^2$}
+    \AxiomC{$\neg B^2$}
+    \RightLabel{$\confl{2}{}$}
+    \BinaryInfC{$\bot$}
+  \end{prooftree}
+  \caption{Пример взаимодействия акторов}
+  \label{fig:ecr-example-1}
+\end{figure}
+
+\begin{figure}
+  \begin{prooftree}
+    \AxiomC{}
+    \RightLabel{$\mathbf{d}$}
+    \UnaryInfC{$[P(x)]^1$}
+    
+	\AxiomC{$\neg P(f(y)) \vee Q$}
+    \RightLabel{$\upr{}{\{x \setminus f(y)\}}$}
+    \BinaryInfC{$Q$}
+    
+    \AxiomC{$[P(x)]^1$}
+    \AxiomC{$\neg P(f(z)) \vee \neg Q$}
+    \RightLabel{$\upr{}{\{x \setminus f(z)\}}$}
+    \BinaryInfC{$\neg Q$}
+    
+    \RightLabel{$\confl{}{}$}
+    \BinaryInfC{$\bot$}
+    
+    \RightLabel{$\cdcl{}{}$}
+    \UnaryInfC{$\neg P(f(y)) \vee \neg P(f(z))$}
+    
+  \end{prooftree}
+  \caption{Пример не древовидного вывода в \emph{Conflict Resolution}}
+  \label{fig:cr-example-1}
+\end{figure}
+
+
+Давайте рассмотрим несколько примеров.
+% TODO: примеры
+%% TODO: для UPR
+%% TODO: для Conflict
+%% TODO: для CDCL
+%% TODO: для KS
+
+\begin{example}
+На рисунке \ref{fig:ecr-example-1} показан простой пример взаимодействия двух акторов со следующей специализацией: $\Xi_1 = \{A\}; \Xi_2 = \{B\}$. Акторы получают множество утверждений $\{A \vee B, \neg A, \neg B\}$ и показывают его противоречивость.
+\end{example}
+
+%TODO: мб перенести этот пример в первую главу?
+В связи с тем, что одно предположение может использоваться несколько раз, и вообще говоря доказательство представляет собой ациклический граф, а не дерево, в правиле \emph{CDCL} каждое предположение вырождается в клоз, состоящий из применения всех унификаций, использованых в доказательстве, к предположение. Следующий пример показывает это.
+\begin{example}
+На рисунке \ref{fig:cr-example-1} показан пример не древовидного доказательства. Здесь предположение $P(x)$ было использовано дважды, и поэтому существует несколько путей до противоречия в графе вывода.
+\end{example}
+
 
 \begin{figure}\begin{calculus}\centering
 
+%%% Unit-Propagation inference rule
 \textbf{Unit-Propagating Resolution:}
 $$
 \infer[\upr{i}{\sigma}]
@@ -93,17 +157,18 @@ $$
 
 \bigskip
 
+%%% Conflict inference rule
 \textbf{Conflict:}
 $$
 \infer[\confl{i}{\sigma}]
-      {\bot}
-      {\ell^i & \overline{\ell'^i}}
+      {(\jmath_1^i \sigma) \vee (\jmath_2^i \sigma)}
+      {(\jmath_1^i \vee \ell^i) & (\jmath_2^i \vee \overline{\ell'^i})}
 $$ 
 
 \bigskip
 
-\textbf{Conflict-Driven Clause Learning:} \\
-
+%%% CDCL inference rule
+\textbf{Conflict-Driven Clause Learning:} 
 $$
 \infer[\cdcl{i}{p}]
       { \jmath \vee (\overline{\ell^i_1} \sigma^1_1 \vee \ldots \vee \overline{\ell^i_1} \sigma^1_{m_1}) \vee \ldots \vee (\overline{\ell^i_n} \sigma^n_1 \vee \ldots \vee \overline{\ell^i_n} \sigma^n_{m_n})
@@ -120,13 +185,12 @@ $$
                }
       }
 $$ 
-
 где $\jmath = ({\jmath^i_1} \sigma'^1_1 \vee \ldots \vee \jmath^i_1 \sigma'^1_{m'_1}) \vee \ldots \vee ({\jmath^i_k} \sigma'^k_1 \vee \ldots \vee \jmath^i_k\sigma'^k_{m'_k})$
 
 \bigskip
 
-\textbf{Knowledge sharing:} \\
-
+%%% Knowledge sharing inference rule
+\textbf{Knowledge sharing:} 
 $$
 \infer[\kshare{i}{j}]
       {\phi^j}
@@ -137,10 +201,13 @@ $$
 
 \end{calculus}
 
-\caption{Исчисление \emph{Distributed Conflict Resolution}}
+\caption{Исчисление \emph{Expertised Conflict Resolution}}
 
-\label{fig:DCR}
+\label{fig:ECR}
 \end{figure}
+
+\subsection{Рассмотрение возможных ограничений на правило \emph{ks}}
+\label{sec:restr}
 
 
 % Для того, чтобы задать нашу модель, нам нужно определить: 
@@ -157,10 +224,48 @@ $$
 
 \textbf{назначим каждому актору множество предикатов, каждый актор это отдельная САДТ, актор получает клоз -- делает предположения по клозам, которые не в его компетенции, пытается вывести боттом, если вывел -- сообщает другим клозам набор предположений, типа что-то из этого точно верно будет, так как по его части противоречие. общаются акторы в какой-то топологии, например по кольцу передают.}
 
-\textbf{пример: два актора, первый отвечает за предикат $A$, второй за предикат $B$, формулы $A \vee B$, $\neg A$, $\neg B$, актор $A$ выведет $B$, отдаст актору $B$, который выведет $\bot$ }
 
+\section{Доказательство полноты по опровержению}
 
-\section{Доказательство refutation полноты}
+Из \cite{DBLP:journals/corr/SlaneyP16} мы знаем, что \emph{Conflict Resolution} полно относительно \emph{Resolution}, а значит достаточно показать, что \emph{Expertised Conflict Resolution} симулирует \emph{Conflict Resolution}.
+
+\begin{theorem}
+Для любой формулы $\phi$, выводимой в \emph{Conflict Resolution}, существует номер актора $i$ и вывод формулы $\phi^i$ в \emph{Expertised Conflict Resolution}.
+\end{theorem}
+\begin{proof}
+Заметим, что благодаря правилу \emph{Knowledge sharing}, если вершина выводима в акторе $i$, то она выводима в любом акторе $j$. Поэтому мы можем доказывать более сильное утверждение:
+пусть $\psi$ --- вывод клоза $\phi$ из множества клозов $S$ в исчислении \emph{Conflict Resolution}. Покажем, что для любого $i$ существует вывод клоза $\phi^i$ из множества клозов $S$ в новом исчислении \emph{Expertised Conflict Resoution} индукцией по структуре доказательства в \emph{Conflict Resolution}.
+
+\begin{figure}
+  \begin{prooftree}
+    \AxiomC{$(A \vee B)^1$}
+    \AxiomC{$\neg A^1$}
+    \RightLabel{$\confl{1}{}$}
+    \BinaryInfC{$B^1$}
+    \RightLabel{$\kshare{1}{2}$}
+    \UnaryInfC{$B^2$}
+    \AxiomC{$\neg B^2$}
+    \RightLabel{$\confl{2}{}$}
+    \BinaryInfC{$\bot$}
+  \end{prooftree}
+  \caption{f}
+  \label{fig:ff}
+\end{figure}
+
+\begin{itemize}[label=$\star$] 
+\item \emph{База:} Единственная вершина $c$, содержащая формулу $\phi$ --- по начальному распределению она попадёт в какой-то актор $i$, а значит есть вывод $\phi^i$, следовательно есть вывод $\phi^j$ для произвольного $j$.
+\item \emph{Переход:} в \emph{CR} бывает три случая:
+\begin{enumerate}
+	\item \emph{Unit-Propagation Resolution.} Пусть в правиле вывода из \emph{CR} участвуют $\{\ell_1, \ell_2, \ldots, \ell_k\}$, тогда обозначим это множество за $L$. Будем строить вывод, симулирующий \emph{Unit-Propagation Resolution} из \emph{CR} индукцией по размеру множества $L$.
+    \begin{itemize}[label=$\star$]
+    	\item \emph{База:} Существует актор $i$ такой, что для любого литерала $\ell$ из $L$ верно, что актор $i$ специализируется на этом литерале, т.е. $\Xi_i(\ell)$. В этом случае \emph{Unit-Propagation Resolution} в вершине $i$ выведет такой же литерал $\ell$, как соответствующее правило в \emph{CR}.
+        \item \emph{Переход:} Множество $L$ имеет конечный размер, а значит мы можем взять произвольный литерал $\ell$ из этого множества и найти такой актор $i$, что $\Xi_i(\ell)$. Применим в этом акторе \emph{Unit-Propagation Resolution} над множеством клозов, которые использовались в выводе из \emph{CR}.
+    \end{itemize}
+    \item
+    \item
+\end{enumerate}
+\end{itemize}
+\end{proof}
 
 \subsection{Доказательство для части Бернайса-Шейфенкеля}
 
@@ -174,12 +279,11 @@ $$
 % \end{proof}
 % \end{document}
 
-\textbf{Теорема: по доказательству из CR можно получить доказательство в Акторах. Доказательсвто: индукция -- смотрим какое действие в выводе было последним, разбираем случаи}
+\texttt{TODO: доказательство}
 
-\textbf{Обратно примерно так же}
-
-\subsection{Обобщение на общий случай}
+\subsection{Общий случай}
 
 \subsection{Доказательство полноты для исчисления с ограничениями}
 
-\section{Динамическое описание }
+\section{Динамическое изменение.}
+\label{sec:onlineChanging}
