@@ -1,0 +1,130 @@
+\documentclass[times,specification,annotation]{itmo-student-thesis}
+
+\usepackage{icomma}
+
+\usepackage{tikz}
+\usepackage{systeme}
+\usetikzlibrary{arrows}
+\usepackage{filecontents}
+\usepackage{fancybox}
+\usepackage{array}
+\usepackage{proof}
+\usepackage{fontspec}
+\usepackage{bussproofs}
+
+\graphicspath{ {images/} }
+
+
+
+%% TODO: нумерация для theorem, defenitions, examples должна различаться
+%% box для правил вывода
+\newenvironment{calculus}
+{\begin{center}\begin{Sbox}\begin{minipage}[b]{0.98\textwidth}}
+{\end{minipage}\end{Sbox}\fbox{\TheSbox}\end{center}}
+
+%% правила вывода из оригинальной статьи
+\newcommand{\upr}[2]{\mathbf{u}_{#1}(#2)}
+\newcommand{\confl}[2]{\mathbf{c}_{#1}(#2)}
+\newcommand{\cdcl}[2]{\mathbf{cl}_{#1}^{#2}}
+
+%% новые правила
+\newcommand{\kshare}[2]{\mathbf{ks}^{#1}_{#2}}
+
+\newcommand{\insp}[2]{\emph{$\Xi$}_{#1}(#2)}
+
+\newcommand{\dls}[2]{\begin{tiny}{#1}_{#2}\end{tiny}}
+
+%% Указываем файл с библиографией.
+\addbibresource{bachelor-thesis.bib}
+
+\begin{document}
+
+\studygroup{M3439}
+\title{Параллелизация системы автоматического доказательства теорем в теории первого порядка}
+\author{Подтелкин Владислав Евгеньевич}{Подтелкин В.Е.}
+\supervisor{Штукенберг Дмитрий Григорьевич}{Штукенберг Д.Г.}{тьютор каф. КТ}{}
+\publishyear{2018}
+\startdate{01}{сентября}{2017}
+\finishdate{31}{мая}{2018}
+
+\defencedate{10}{июня}{2018}
+
+\secretary{Павлова О.Н.}
+
+%% Задание
+%%% Техническое задание и исходные данные к работе
+\technicalspec{Требуется обобщить исчсисление Conflict Resolution на модель Акторов. Необходимо реализовать алгоритм на основе обобщённого исчисления и протестировать его на задачах из библиотеки TPTP.}
+
+%%% Содержание выпускной квалификационной работы (перечень подлежащих разработке вопросов)
+\plannedcontents{
+  \begin{enumerate}
+    \item Описание исчисления Conflict Resolution в модели Акторов
+    \item Реализация алгоритма, основанного на новом исчислении
+    \item Проведение экспериментов и сравнение результатов с существующими решениями 
+  \end{enumerate}
+}
+
+%%% Исходные материалы и пособия 
+\plannedsources{
+  \begin{enumerate}
+    \item Slaney J., Woltzenlogel Paleo B. Conflict Resolution: a First-Order
+      Resolution Calculus with Decision Literals and Conflict-Driven Clause
+      Learning
+      
+    \item Itegulov D., Slaney J., Woltzenlogel Paleo B. Scavenger 0.1: A Theorem Prover Based on Conflict Resolution
+    
+    \item Исходный код программного средства Scavenger
+  \end{enumerate}
+}
+
+%%% Календарный план
+\addstage{\textbf{TODO}}{01.09.2017}
+\addstage{Ознакомление с исчислением Conflict Resolution}{01.10.2017}
+\addstage{Ознакомление с кодовой базой Scavenger}{15.10.2017}
+\addstage{Построение общих концептов работы алгоритма}{01.12.2017}
+\addstage{Реализация различных версий предложенного алгоритма}{01.02.2018}
+\addstage{Экспериментальное исследование алгоритма и сравнение с другими системами автоматических доказательств}{01.03.2018}
+\addstage{Написание пояснительной записки}{30.05.2018}
+
+%%% Цель исследования
+\researchaim{Обобщить исчисление Conflict Resolution на модель Акторов. Разработать алгоритм на основе нового исчисления.}
+
+%%% Задачи, решаемые в ВКР
+\researchtargets{
+  \begin{enumerate}
+      \item Описание преимуществ и недостатков акторной модели по сравнению с другими подходами
+      \item Обобщение исчисления на Акторную модель
+      \item Разработка алгоритма на основе нового исчисления
+      \item Доказательства полноты относительно опровержения для нового исчисления и для алгоритма
+      \item Реализация алгоритма на языке программирования Scala
+  \end{enumerate}
+}
+
+%%% Использование современных пакетов компьютерных программ и технологий
+\advancedtechnologyusage{Был использован язык \emph{Scala}, фреймворки \emph{akka-actors}, \emph{scalatest}, система контроля версий git, система компьютерной вёрстки \emph{LaTeX}}
+
+%%% Краткая характеристика полученных результатов 
+\researchsummary{Разработано новое исчисление и написан распределённый алгоритм, на основе этого исчисления.}
+
+%%% Гранты, полученные при выполнении работы 
+\researchfunding{
+  Работа была частично проспонсирована программой Google Summer of Code.
+}
+
+%%% Наличие публикаций и выступлений на конференциях по теме выпускной работы
+\researchpublications{Публикации и выступления отсутствуют.}
+
+%% Эта команда генерирует титульный лист и аннотацию.
+\maketitle{Бакалавр}
+
+%% Оглавление
+\tableofcontents
+                                                                                                                            
+\input{chapters/introduction.tex}
+\input{chapters/chapter1.tex}
+\input{chapters/chapter2.tex}
+\input{chapters/chapter3.tex}
+
+\printmainbibliography
+
+\end{document}
