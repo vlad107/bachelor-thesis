@@ -231,7 +231,7 @@ $$
 Правило \emph{Conflict} из \emph{Conflict Resolution} можно выразить в исчислении \emph{Expertised Conflict Resolution}.
 \end{lemma}
 \begin{proof}
-В правиле \emph{Conflict} на рис. \ref{fig:CR} участвуют литералы $\ell$ и $\overline{\ell'}$. По свойству разбиения специализации по акторам, существует такой актор $j$, что $\Psi_j(\ell)$ и $\Psi_j(\overline{\ell'})$, а значит в нём правило \emph{Conflict} из \emph{EPR}, по $\ell^j, (\overline{\ell'})^j$ выведет $\bot$.
+В правиле \emph{Conflict} на рис. \ref{fig:CR} участвуют литералы $\ell$ и $\overline{\ell'}$. По свойству разбиения специализации по акторам, существует такой актор $j$, что $\Psi_j(\ell)$ и $\Psi_j(\overline{\ell'})$, а значит в нём правило \emph{Conflict} из \emph{EPR}, по $\ell^j\text{ и }(\overline{\ell'})^j$ выведет $\bot$.
 \end{proof}
 
 \begin{lemma}
@@ -239,7 +239,7 @@ $$
 Правило \emph{Conflict-Driven Clause Learning} из \emph{Conflict Resolution} можно выразить в исчислении \emph{Expertised Conflict Resolution}.
 \end{lemma}
 \begin{proof}
-
+Правило \emph{Conflict-Driven Clause Learning} из исчисления \emph{CR} было описано на рисунке \ref{fig:CR}. Пусть в нём были сделаны предположения $D = \{\ell_1, \ldots, \ell_n\}$. Индукцией по размеру множества предположений мы можем назначить каждому литералу идентификатор актора, который специализируется на этом литерале, и в котором будет сделано данное предположение в доказательстве из исчисления \emph{ECR}. В \emph{CR} из множества $D$ выводится $\bot$, а значит по лемме \ref{lem:confl} существует вывод $\bot$ и в \emph{ECR}. После применения \ref{lem:confl} мы можем применить правило \emph{Conflict-Driven Clause Learning} из исчисления \emph{ECR}, и таким образом получить $\ell_1 \vee \ldots \vee \ell_n$.
 \end{proof}
 
 \begin{theorem}
