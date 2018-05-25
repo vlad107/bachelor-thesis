@@ -673,18 +673,18 @@
     \begin{small}
         {\centering\bfseries \MakeUppercase{\worktypeGenitive} \par}
         \bigskip
-        \noindent \textbf{Студент:} \theauthor\par
-        \noindent \textbf{Наименование темы работы:} \thetitle\par
-        \noindent \textbf{Наименование организации, где выполнена работа:} \thedegreehost\par
+        \noindent \textbf{Студента } \theauthor\par
+        \noindent \textbf{Наименование темы ВКР:} \thetitle\par
+        \noindent \textbf{Наименование организации, где выполнена ВКР:} \thedegreehost\par
         \bigskip
         {\centering\bfseries ХАРАКТЕРИСТИКА \MakeUppercase{\worktypeGenitive} \par}
         \bigskip
-        \noindent \textbf{1 Цель исследования:} \theresearchaim \par
+        \noindent \textbf{1 Цель исследования } \theresearchaim \par
         \pagebreak[3]
-        \noindent \textbf{2 Задачи, решаемые в работе:} \theresearchtargets \par
+        \noindent \textbf{2 Задачи, решаемые в ВКР } \theresearchtargets \par
         \pagebreak[3]
-        \noindent \textbf{3 Число источников, использованных при составлении обзора:} \relatedworksourcecount \par
-        \noindent \textbf{4 Полное число источников, использованных в работе:} \total{citnum} \par
+        \noindent \textbf{3 Число источников, использованных при составлении обзора } \relatedworksourcecount \par
+        \noindent \textbf{4 Полное число источников, использованных в работе } \total{citnum} \par
         \noindent \textbf{5 В том числе источников по годам} \par
         \begin{tabular}{|c|c|c|c|c|c|}\hline
             \multicolumn{3}{|c|}{Отечественных} & \multicolumn{3}{c|}{Иностранных} \\\hline
@@ -693,9 +693,13 @@
             \russiansourcesfiveyears & \russiansourcestenyears & \russiansourcesveryold &
             \foreignsourcesfiveyears & \foreignsourcestenyears & \foreignsourcesveryold \\\hline
         \end{tabular}\par
-        \noindent \textbf{6 Использование информационных ресурсов Internet:} \internetsources \par
+        \noindent \textbf{6 Использование информационных ресурсов Internet } \internetsources \par
+        \begin{tabular}{|c|c|}\hline
+            Пакеты компьютерных программ и технологий & Параграфы \\\hline
+            \russiansourcesfiveyears & \russiansourcestenyears \\\hline
+        \end{tabular}\par
         \pagebreak[3]
-        \noindent \textbf{7 Использование современных пакетов компьютерных программ и технологий:}
+        \noindent \textbf{7 Использование современных пакетов компьютерных программ и технологий }
             \theadvancedtechnologyusage\par
         \pagebreak[3]
         \noindent \textbf{8 Краткая характеристика полученных результатов:}
