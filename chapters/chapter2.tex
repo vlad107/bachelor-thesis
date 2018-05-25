@@ -97,9 +97,7 @@
 
 \begin{figure}
   \begin{prooftree}
-    \AxiomC{}
-    \RightLabel{$\mathbf{d}$}
-    \UnaryInfC{$[P(x)]^1$}
+    \AxiomC{$[P(x)]^1$}
     
 	\AxiomC{$\neg P(f(y)) \vee Q$}
     \RightLabel{$\upr{}{\{x \setminus f(y)\}}$}
@@ -128,12 +126,40 @@
 На рисунке \ref{fig:ecr-example-1} показан простой пример взаимодействия двух акторов со следующей специализацией: $\Psi_1 = \{A\}; \Psi_2 = \{B\}$. Акторы получают множество утверждений $\{A \vee B, \neg A, \neg B\}$ и показывают его противоречивость.
 \end{example}
 
+\begin{figure}
+  \begin{prooftree}
+    \AxiomC{$[P(x)^1]^1$}
+	\AxiomC{$(\neg P(f(y)) \vee Q)^1$}
+    \RightLabel{$\confl{1}{\{x \setminus f(y)\}}$}
+    \BinaryInfC{$Q^1$}
+    \RightLabel{$\kshare{1}{2}$}
+	\UnaryInfC{$Q^2$}
+  \end{prooftree}
+  \caption{Пример преобразования \emph{Unit-Propagation}-1}
+  \label{fig:ecr-hard-example-1}
+\end{figure}
+
+\begin{figure}
+  \begin{prooftree}
+    \AxiomC{$[P(x)^1]^1$}
+    \AxiomC{$(\neg P(f(z)) \vee \neg Q)^1$}
+    \RightLabel{$\confl{1}{\{x \setminus f(z)\}}$}
+    \BinaryInfC{$(\neg Q)^1$}
+    \RightLabel{$\kshare{1}{2}$}
+    \UnaryInfC{$(\neg Q)^2$}
+  \end{prooftree}
+  \caption{Пример преобразования \emph{Unit-Propagation}-2}
+  \label{fig:ecr-hard-example-2}
+\end{figure}
+
+
+
 %TODO: мб перенести этот пример в первую главу?
 В связи с тем, что одно предположение может использоваться несколько раз, и вообще говоря доказательство представляет собой ациклический граф, а не дерево, в правиле \emph{CDCL} каждое предположение вырождается в клоз, состоящий из применения всех унификаций, использованых в доказательстве, к предположение. Следующий пример показывает это.
 \begin{example}
+\label{exmpl:cr-nonEPR}
 На рисунке \ref{fig:cr-example-1} показан пример не древовидного доказательства. Здесь предположение $P(x)$ было использовано дважды, и поэтому существует несколько путей до противоречия в графе вывода.
 \end{example}
-
 
 \begin{figure}\begin{calculus}\centering
 
@@ -201,9 +227,35 @@ $$
 \label{fig:ECR}
 \end{figure}
 
+\begin{figure}
+  \begin{prooftree}
+    \AxiomC{Вывод с рисунка \ref{fig:ecr-hard-example-1}}
+    \UnaryInfC{$Q^2$}
+    
+    \AxiomC{Вывод с рисунка \ref{fig:ecr-hard-example-2}}
+    \UnaryInfC{$(\neg Q)^2$}
+    
+    \RightLabel{$\confl{2}{}$}
+    \BinaryInfC{$\bot$}
+    
+    \RightLabel{$\cdcl{2}{}$}
+    \UnaryInfC{$(\neg P(f(y)) \vee \neg P(f(z)))^2$}
+    \RightLabel{$\kshare{2}{1}$}
+    \UnaryInfC{$(\neg P(f(y)) \vee \neg P(f(z)))^1$}
+  \end{prooftree}
+  \caption{Вывод в \emph{ECR}}
+  \label{fig:ecr-hard-example}
+\end{figure}
+
 \section{Доказательство полноты по опровержению}
 
-Из \cite{DBLP:journals/corr/SlaneyP16} мы знаем, что \emph{Conflict Resolution} полно относительно \emph{Resolution}, а значит достаточно показать, что \emph{Expertised Conflict Resolution} симулирует \emph{Conflict Resolution}.
+Из \cite{DBLP:journals/corr/SlaneyP16} мы знаем, что \emph{Conflict Resolution} полно относительно \emph{Resolution}, а значит достаточно показать, что \emph{Expertised Conflict Resolution} симулирует \emph{Conflict Resolution}. 
+
+
+Далее мы покажем конструктивный способ как из вывода в \emph{CR} получить вывод в \emph{ECR}. 
+\begin{example}
+ Для вывода из примера \ref{exmpl:cr-nonEPR} и спецификации на акторах $\Psi_1 = \{P\}, \Psi_2 = \{Q\}$ алгоритм получит вывод, показанный на рисунке \ref{fig:ecr-hard-example}.
+\end{example}
 
 \subsection{Доказательство для части Бернайса-Шейфенкеля}
 \label{sec:bsh-proof}
@@ -216,7 +268,7 @@ $$
 Правило \emph{Unit-Propagation Resolution} из \emph{Conflict Resolution} можно выразить в исчислении \emph{Expertised Conflict Resolution}.
 \end{lemma}
 \begin{proof}
-Обозначим за $L$ множество литералов $\{\ell_1, \ldots, \ell_n\}$ из правила \emph{Unit Propagation Resolution} на рис. \ref{fig:CR}. $\ell$ --- выводимый литерал.
+Обозначим за $L$ множество литералов $\{\ell_1, \ldots, \ell_n\}$ из правила \emph{Unit Propagation Resolution} на рисунке \ref{fig:CR}. $\ell$ --- выводимый литерал.
 Доказательство в \emph{ECR} будем строить индукцией по размеру множества $L$:
 \begin{itemize}[label=$\star$]
 	\item \emph{База:} Существует такой актор $i$, что для любого литерала $\ell_k$ из $L$ верно, что актор $i$ специализируется на этом литерале, т.е. $\Psi_i(\ell_k)$. Если $\Psi_i(\ell)$, то в акторе $i$ можно применить правило \emph{Unit-Propagation Resolution}, описанное на рис. \ref{fig:ECR}, это правило даст нужное нам $\ell$. В противном случае правило \emph{Conflict} сократит все литералы, кроме выводимого $\ell$.
@@ -244,6 +296,8 @@ $$
 Правило \emph{Conflict-Driven Clause Learning} из исчисления \emph{CR} было описано на рисунке \ref{fig:CR}. Пусть в нём были сделаны предположения $D = \{\ell_1, \ldots, \ell_n\}$. Индукцией по размеру множества предположений мы можем назначить каждому литералу идентификатор актора, который специализируется на этом литерале, и в котором будет сделано данное предположение в доказательстве из исчисления \emph{ECR}. В \emph{CR} из множества $D$ выводится $\bot$, а значит по лемме \ref{lem:confl} существует вывод $\bot$ и в \emph{ECR}. После применения \ref{lem:confl} мы можем применить правило \emph{Conflict-Driven Clause Learning} из исчисления \emph{ECR}, и таким образом получить $\ell_1 \vee \ldots \vee \ell_n$.
 \end{proof}
 
+Таким образом, каждое правило из \emph{Conflict Resolution} мы выразили в \emph{Expertised Conflict Resolution}. Заметим, что мы сохранили структуру графа доказательства, а именно: не появилось новых литералов в процессе применения унификаций на путях. Теперь докажем основную теорему:
+
 \begin{theorem}
 \label{thm:completeness-bs}
 Для формулы $\phi$ из класса Бернайса-Шейфенкеля, выводимой в \emph{Conflict Resolution}, существует номер актора $i$ и вывод формулы $\phi^i$ в \emph{Expertised Conflict Resolution}.
@@ -265,44 +319,43 @@ $$
 
 Заметим, что нам необходимо было доказать полноту по опровержению, а мы построили для каждого доказательства из \emph{Conflict Resolution} соответствующее доказательство из \emph{Expertised Conflict Resolution}, тем самым доказали полноту.
 
-\subsection{Доказательство для общего случая}
-
-В предыдущем разделе мы доказали полноту по опровержению для исчисления \emph{Expertised Conflict Resolution} в случае класса Бернайса-Шейфенкеля. Теперь давайте обобщим на литералы произвольной глубины.
-
-В общем случае возниают следующие проблемы:
-\begin{itemize}
-	\item Во-первых для каждого пути в графе доказательства композиция унификаций может давать уникальный литерал.
-    \item Во-вторых может расти глубина литерала.
-\end{itemize}
-
-Для того, чтобы корректно обходить обе проблемы, заметим, что мы доказываем \emph{полноту по опровержению}. Иначе говоря, нам важно лишь доказать, что если $\bot$ выводится в исчислении \emph{Conflict Resolution}, то существует доказательство $\bot$ и в исчислении \emph{Expertised Conflict Resolution}. Очевидным образом по индукции доказывается, что если множество клозов противоречиво, то из любого клоза мы можем выкинуть произвольное подмножество литералов, и множество останется противоречивым. 
 
 
+% \subsection{Общий случай}
 
-\begin{theorem}
-Пусть существует вывод клоза $\ell_1, \ldots, \ell_n$ в исчислении \emph{Conflict Resolution}.
-Тогда существует клоз $\ell'_1, \ldots, \ell'_m$, где $0 \leq m \leq n$, выводимый в исчислении \emph{Expertised Conflict Resolution}. Причём существует такая подстановка $\sigma$, что для любого $1 \leq i \leq m$ верно, что $\ell_i=\ell'_i\sigma$.
-\end{theorem}
-\begin{proof}
-Доказательство будем строить индукцией по структуре вывода в исчислении \emph{Conflict Resolution}.
-\begin{itemize}[label=$\star$]
-	\item \emph{База:} Для формулы $\phi$ исходной вершины $c$, аналогично базе доказательства \ref{thm:completeness-bs}, существует доказательство формулы $\phi^i$.
-    \item \emph{Переход:} 
-      \begin{enumerate}
-      	\item \emph{Unit-Propagation Resolution.} Из рисунка \ref{fig:CR} видно, что в этом правиле используются следующие клозы: $\{\ell_1, \ldots, \ell_n, \overline{\ell'_1} \vee \ldots \overline{\ell'_n} \vee \ell\}$. Рассмотрим три случая: 
-        \begin{enumerate}
-        	\item Хотя бы для одного из клозов из $\{\ell_1, \ldots, \ell_n\}$ в \emph{ECR} вывелось доказательство $\bot^i$. Тогда этот $\bot^i$ подходит и для клоза $\ell$.
-            \item Для каждого $\ell_j$ построилось доказательство для формулы ${\ell'}_j^i$, причём существует подстановка ${\ell'}_j^i\sigma'=\ell_j$. А также для клоза $\overline{\ell'_1} \vee \ldots \overline{\ell'_n} \vee \ell$  построилось доказательство для формулы $\overline{{\ell''}_1} \vee \ldots \overline{{\ell''}_k} \vee \ell'$. В данном случае мы можем сослаться на лемму \ref{lem:upr} и построить вывод формулы ${\ell'}^i$ для некоторого актора $i$.
-        \end{enumerate}
-        \item \emph{Conflict.} Как показано на рисунке \ref{fig:CR}, в данном правиле используются $\ell$ и $\ell'$. Значит по предположению индукции бывает два случая:
-        \begin{enumerate}
-        	\item Хотя бы в одном из случаев $\ell, \ell'$ выводится $\bot$. Этот случай очевиден.
-            \item Существует вывод для $\ell^i, (\ell')^i$, таких что $\ell^i\sigma'=\ell$ и $(\ell')^i\sigma'=\ell'$. Из \emph{CR} следует, что существует унификация для правила вывода $\mathbf{c}(\sigma)$ на литераллах $\ell, \ell'$. Тогда $\mathbf{c_i}(\sigma \cdot \sigma')$ -- правило вывода \emph{Conflict} в \emph{ECR} для литераллов $\ell^i, (\ell')^i$.
-        \end{enumerate}
-        \item \emph{Conflict-Driven Clause Learning.} Как показано на рисунке \ref{fig:CR}, в данном правиле используются предположения $\{[\ell_1], \ldots, [\ell_n]\}$, по лемме, аналогичной лемме \ref{lem:cdcl}, мы получим клоз $\jmath \vee ((\ell^i_1\sigma^1_1) \vee \ldots \vee (\ell^i_{m_1}\sigma^1_{m_1})) \vee ((\ell^i_n\sigma^n_1) \vee \ldots \vee (\ell^i_{m_n}\sigma^n_{m_n}))$. 
-      \end{enumerate}
-\end{itemize}
-\end{proof}
+
+% В предыдущем разделе мы доказали полноту по опровержению для исчисления \emph{Expertised Conflict Resolution} в случае класса Бернайса-Шейфенкеля. Теперь давайте обобщим на литералы произвольной глубины.
+
+% В общем случае 
+
+% Для доказательства общего случая необходимо аккуратно показать, что у нас не появится новых литералов в результатирующих клозах.
+
+
+
+% \begin{theorem}
+% Пусть существует вывод клоза $\ell_1, \ldots, \ell_n$ в исчислении \emph{Conflict Resolution}.
+% Тогда существует клоз $\ell'_1, \ldots, \ell'_m$, где $0 \leq m \leq n$, выводимый в исчислении \emph{Expertised Conflict Resolution}. Причём существует такая подстановка $\sigma$, что для любого $1 \leq i \leq m$ верно, что $\ell_i=\ell'_i\sigma$.
+% \end{theorem}
+% \begin{proof}
+% Доказательство будем строить индукцией по структуре вывода в исчислении \emph{Conflict Resolution}.
+% \begin{itemize}[label=$\star$]
+% 	\item \emph{База:} Для формулы $\phi$ исходной вершины $c$, аналогично базе доказательства \ref{thm:completeness-bs}, существует доказательство формулы $\phi^i$.
+%     \item \emph{Переход:} 
+%       \begin{enumerate}
+%       	\item \emph{Unit-Propagation Resolution.} Из рисунка \ref{fig:CR} видно, что в этом правиле используются следующие клозы: $\{\ell_1, \ldots, \ell_n, \overline{\ell'_1} \vee \ldots \overline{\ell'_n} \vee \ell\}$. Рассмотрим три случая: 
+%         \begin{enumerate}
+%         	\item Хотя бы для одного из клозов из $\{\ell_1, \ldots, \ell_n\}$ в \emph{ECR} вывелось доказательство $\bot^i$. Тогда этот $\bot^i$ подходит и для клоза $\ell$.
+%             \item Для каждого $\ell_j$ построилось доказательство для формулы ${\ell'}_j^i$, причём существует подстановка ${\ell'}_j^i\sigma'=\ell_j$. А также для клоза $\overline{\ell'_1} \vee \ldots \overline{\ell'_n} \vee \ell$  построилось доказательство для формулы $\overline{{\ell''}_1} \vee \ldots \overline{{\ell''}_k} \vee \ell'$. В данном случае мы можем сослаться на лемму \ref{lem:upr} и построить вывод формулы ${\ell'}^i$ для некоторого актора $i$.
+%         \end{enumerate}
+%         \item \emph{Conflict.} Как показано на рисунке \ref{fig:CR}, в данном правиле используются $\ell$ и $\ell'$. Значит по предположению индукции бывает два случая:
+%         \begin{enumerate}
+%         	\item Хотя бы в одном из случаев $\ell, \ell'$ выводится $\bot$. Этот случай очевиден.
+%             \item Существует вывод для $\ell^i, (\ell')^i$, таких что $\ell^i\sigma'=\ell$ и $(\ell')^i\sigma'=\ell'$. Из \emph{CR} следует, что существует унификация для правила вывода $\mathbf{c}(\sigma)$ на литераллах $\ell, \ell'$. Тогда $\mathbf{c_i}(\sigma \cdot \sigma')$ -- правило вывода \emph{Conflict} в \emph{ECR} для литераллов $\ell^i, (\ell')^i$.
+%         \end{enumerate}
+%         \item \emph{Conflict-Driven Clause Learning.} Как показано на рисунке \ref{fig:CR}, в данном правиле используются предположения $\{[\ell_1], \ldots, [\ell_n]\}$, по лемме, аналогичной лемме \ref{lem:cdcl}, мы получим клоз $\jmath \vee ((\ell^i_1\sigma^1_1) \vee \ldots \vee (\ell^i_{m_1}\sigma^1_{m_1})) \vee ((\ell^i_n\sigma^n_1) \vee \ldots \vee (\ell^i_{m_n}\sigma^n_{m_n}))$. 
+%       \end{enumerate}
+% \end{itemize}
+% \end{proof}
 
 % \begin{theorem}
 % Для любой формулы $\phi$, выводимой в \emph{Conflict Resolution}, существует номер актора $i$ и вывод формулы $\phi^i$ в \emph{Expertised Conflict Resolution}.
