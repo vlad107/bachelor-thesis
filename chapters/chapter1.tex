@@ -1,4 +1,4 @@
-\chapter{Введение в область}
+\chapter{Постановка задачи}
 \startrelatedwork
 \label{sec:chap1}
 
@@ -10,14 +10,14 @@
 
 Далее будем считать, что нам даны:
 \begin{enumerate}
-	\item $V$    --- счётное множество названий переменных
-    \item $CS$   --- множество константных символов
+	\item $V$    --- счётное множество названий переменных;
+    \item $CS$   --- множество константных символов;
     \item $FS_i$ --- множество функциональных символов с $i$ аргументами, где $i \in \mathbb{N}$. \\
     $FS = \bigcup\limits_{i=1}^{\infty} FS_{i}$
     \item $PS_i$ --- множество предикатных символов с $i$ аргументами, где $i \in \mathbb{N}$. \\
     $PS = \bigcup\limits_{i=1}^{\infty} PS_{i}$
-    \item Логические связки --- символы $\vee, \wedge, \rightarrow, \neg$
-    \item Кванторы --- символы $\forall, \exists$
+    \item Логические связки --- символы $\vee, \wedge, \rightarrow, \neg$;
+    \item Кванторы --- символы $\forall, \exists$.
 \end{enumerate}
 
 
@@ -25,9 +25,9 @@
 \begin{definition}
   \emph{Множество термов $T$.} Минимальное по включению множество, определяемое индуктивно:
   \begin{enumerate}
-  	\item $V \subseteq T$
-    \item $CS \subseteq T$
-    \item Если $t_1, t_2, \ldots, t_k \in T; f \in FS_k$, тогда $f(t_1, t_2, \ldots, t_k) \in T$
+  	\item $V \subseteq T$;
+    \item $CS \subseteq T$;
+    \item Если $t_1, t_2, \ldots, t_k \in T; f \in FS_k$, тогда $f(t_1, t_2, \ldots, t_k) \in T$;
   \end{enumerate}
   будем называть \emph{множеством термов}.
 \end{definition}
