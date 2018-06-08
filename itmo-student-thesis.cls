@@ -141,6 +141,7 @@
 
 %\RequirePackage{pageslts} % В текущей версии шаблона нет объема работы. Удивительно, но да.
 
+% \RequirePackage{pageslts}
 \RequirePackage{totcount}
 \RequirePackage{longtable}
 \regtotcounter[auxfile=\jobname.tct]{figure}
@@ -393,9 +394,8 @@
 }
 
 %% Приемлемый внешний вид содержания
-
 \contentsmargin{1.8em}
-\newcommand{\chapterW}{1.2em}
+\newcommand{\chapterW}{3.6em}
 \newcommand{\sectionW}{2.2em}
 \newcommand{\subsectionW}{2.6em}
 
@@ -421,20 +421,8 @@
 \titlecontents{chapter}
     [\chapterPrefix]
     {}
-    {\contentslabel[\thecontentslabel.]{\chapterW}}
+    {\contentslabel[Глава~\thecontentslabel.]{\chapterW}}
     {\hspace*{-\chapterW}}
-    {\titlerule*[0.5pc]{.}\contentspage}
-\titlecontents{section}
-    [\sectionPrefix]
-    {}
-    {\contentslabel[\thecontentslabel.]{\sectionW}}
-    {\hspace*{-\sectionW}}
-    {\titlerule*[0.5pc]{.}\contentspage}
-\titlecontents{subsection}
-    [\subsectionPrefix]
-    {}
-    {\contentslabel[\thecontentslabel.]{\subsectionW}~}
-    {\hspace*{-\subsectionW}}
     {\titlerule*[0.5pc]{.}\contentspage}
 
 %% Выводы по главе - удобная команда
@@ -718,6 +706,8 @@
     \end{titlepage}
     \fi
     \pagenumbering{arabic}
+    
+    \setcounter{page}{4}
 
     %% Ставим номер страницы сверху по центру
     \newcommand{\TheOnlyTruePageStyle}{fancy}
@@ -733,7 +723,6 @@
     \addtolength{\voffset}{3mm}
     \addtolength{\headsep}{-3mm}
 
-    \setcounter{page}{4}
     % Выключаем переносы в оглавлении
     \pretocmd{\tableofcontents}{\begingroup\banhyphens}{}{}
     \apptocmd{\tableofcontents}{\endgroup}{}{}
